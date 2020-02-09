@@ -13,7 +13,7 @@ Usage
 
   Your OpenWRT directory should contain a ``feeds.conf``. Add the following line::
 
-   src-git wpa3sec https://github.com/foo/myfeed
+   src-git wpa3sec https://github.com/jenngabriel/wpa3sec
 
 * Install the feed::
 
