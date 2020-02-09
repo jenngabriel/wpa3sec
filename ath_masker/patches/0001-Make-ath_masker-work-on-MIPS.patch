@@ -1,0 +1,34 @@
+From 003420726426b161f620e48532c9117af69cfc30 Mon Sep 17 00:00:00 2001
+From: Jennifer Gabriel <jennifer.gabriel@fau.de>
+Date: Mon, 30 Dec 2019 19:09:50 +0100
+Subject: [PATCH] Make ath_masker work on MIPS.
+
+---
+ ath_masker.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ath_masker.c b/ath_masker.c
+index 4b363cb..1918c32 100644
+--- a/ath_masker.c
++++ b/ath_masker.c
+@@ -50,6 +50,8 @@ static int handler_pre(struct kprobe *p, struct pt_regs *regs)
+ 	struct ath_common *common = (struct ath_common *)regs->ax;
+ #elif defined(CONFIG_ARM)
+ 	struct ath_common *common = (struct ath_common *)regs->ARM_r0;
++#elif defined(CONFIG_MIPS)
++	struct ath_common *common = (struct ath_common *)regs->regs[4];
+ #endif
+ 
+ 	printk("pre_handler: MAC address of device is %pM\n", common->macaddr);
+@@ -85,7 +87,7 @@ static int __init kprobe_init(void)
+ {
+ 	int ret;
+ 
+-#if !defined(CONFIG_X86_64) && !defined(CONFIG_X86) && !defined(CONFIG_ARM)
++#if !defined(CONFIG_X86_64) && !defined(CONFIG_X86) && !defined(CONFIG_ARM) && !defined(CONFIG_MIPS)
+ 	printk(KERN_ALERT "Error: this module only supports x86(_64) or ARM\n");
+ 	return -EINVAL;
+ #endif
+-- 
+2.20.1
+

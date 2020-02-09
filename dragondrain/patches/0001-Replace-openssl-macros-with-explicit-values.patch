@@ -1,0 +1,46 @@
+From ce70f8c42ef2b631f005caf60fe45419f55d9eb6 Mon Sep 17 00:00:00 2001
+From: Jennifer Gabriel <jennifer.gabriel@fau.de>
+Date: Sun, 29 Dec 2019 08:27:50 +0100
+Subject: [PATCH] Replace openssl macros with explicit values.
+
+The current version of OpenSSL in OpenWRT does not define
+BN_RAND_TOP_ANY and BN_RAND_BOTTOM_ANY. This patch replaces the use of
+these macros with the explicit value -1.
+---
+ src/dragondrain.c | 4 ++--
+ src/dragontime.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/dragondrain.c b/src/dragondrain.c
+index be25c46..df805b2 100644
+--- a/src/dragondrain.c
++++ b/src/dragondrain.c
+@@ -784,8 +784,8 @@ int initialize_crypto_context(struct state *state)
+ 	}
+ 
+ 	// For our purposes, a 64-bit random number is more than enough
+-	BN_pseudo_rand(randbn, 64, BN_RAND_TOP_ANY, BN_RAND_BOTTOM_ANY);
+-	BN_pseudo_rand(state->scalar, BN_num_bits(state->order) - 1, BN_RAND_TOP_ANY, BN_RAND_BOTTOM_ANY);
++	BN_pseudo_rand(randbn, 64, -1, -1);
++	BN_pseudo_rand(state->scalar, BN_num_bits(state->order) - 1, -1, -1);
+ 
+ 	if (!EC_POINT_mul(state->group, state->element, NULL, state->generator, randbn, state->bnctx)) {
+ 		fprintf(stderr, "EC_POINT_mul failed\n");
+diff --git a/src/dragontime.c b/src/dragontime.c
+index 056251a..b1070ec 100644
+--- a/src/dragontime.c
++++ b/src/dragontime.c
+@@ -827,8 +827,8 @@ int initialize_ecc_crypto(struct state_ecc *state_ecc, int group)
+ 	}
+ 
+ 	// For our purposes, a 64-bit random number is more than enough
+-	BN_pseudo_rand(randbn, 64, BN_RAND_TOP_ANY, BN_RAND_BOTTOM_ANY);
+-	BN_pseudo_rand(state_ecc->scalar, BN_num_bits(state_ecc->order) - 1, BN_RAND_TOP_ANY, BN_RAND_BOTTOM_ANY);
++	BN_pseudo_rand(randbn, 64, -1, -1);
++	BN_pseudo_rand(state_ecc->scalar, BN_num_bits(state_ecc->order) - 1, -1, -1);
+ 
+ 	if (!EC_POINT_mul(state_ecc->group, state_ecc->element, NULL, state_ecc->generator, randbn, state_ecc->bnctx)) {
+ 		fprintf(stderr, "EC_POINT_mul failed\n");
+-- 
+2.20.1
+
