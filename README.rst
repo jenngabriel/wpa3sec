@@ -17,8 +17,8 @@ Usage
 
 * Install the feed::
 
-   ./scripts/feeds update myfeed
-   ./scripts/feeds install -a -p myfeed
+   ./scripts/feeds update wpa3sec
+   ./scripts/feeds install -a -p wpa3sec
 
 * Configure the packages::
 
